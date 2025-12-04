@@ -1,0 +1,96 @@
+<div class="home-container">
+    <div class="background-gradient"></div>
+
+    <div class="content-wrapper">
+        <div class="login-card">
+            <div class="card-header">
+                <div class="microsoft-logo">
+                    <svg width="48" height="48" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#f3f3f3" d="M0 0h23v23H0z" />
+                        <path fill="#f35325" d="M1 1h10v10H1z" />
+                        <path fill="#81bc06" d="M12 1h10v10H12z" />
+                        <path fill="#05a6f0" d="M1 12h10v10H1z" />
+                        <path fill="#ffba08" d="M12 12h10v10H12z" />
+                    </svg>
+                </div>
+                <h1>Welcome to Azure Authentication</h1>
+                <p class="subtitle">Secure access with Microsoft Identity Platform</p>
+            </div>
+
+            <div class="card-body" *ngIf="!loginDisplay">
+                <div class="info-section">
+                    <p class="info-text">
+                        Sign in with your Microsoft account to access protected resources and your profile.
+                    </p>
+                </div>
+
+                <button class="microsoft-btn" (click)="login()">
+                    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 0H0v10h10V0z" fill="#f25022" />
+                        <path d="M21 0H11v10h10V0z" fill="#7fba00" />
+                        <path d="M10 11H0v10h10V11z" fill="#00a4ef" />
+                        <path d="M21 11H11v10h10V11z" fill="#ffb900" />
+                    </svg>
+                    <span>Sign in with Microsoft</span>
+                </button>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <h3>Secure</h3>
+                            <p>Enterprise-grade security</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <h3>Fast</h3>
+                            <p>Quick authentication</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <div class="feature-text">
+                            <h3>Universal</h3>
+                            <p>Works everywhere</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body" *ngIf="loginDisplay">
+                <div class="welcome-section">
+                    <div class="user-avatar">
+                        {{ username.charAt(0).toUpperCase() }}
+                    </div>
+                    <h2>Welcome back!</h2>
+                    <p class="user-name">{{ username }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <a routerLink="/profile" class="profile-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"
+                                fill="currentColor" />
+                        </svg>
+                        View Profile
+                    </a>
+                    <button class="logout-btn" (click)="logout()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.59L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
+                                fill="currentColor" />
+                        </svg>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Powered by Microsoft Identity Platform (MSAL)</p>
+        </div>
+    </div>
+</div>

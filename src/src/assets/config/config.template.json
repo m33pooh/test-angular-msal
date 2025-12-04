@@ -1,0 +1,19 @@
+{
+  "msalConfig": {
+    "auth": {
+      "clientId": "${MSAL_CLIENT_ID}",
+      "authority": "${MSAL_AUTHORITY}",
+      "redirectUri": "${MSAL_REDIRECT_URI}"
+    },
+    "cache": {
+      "cacheLocation": "localStorage",
+      "storeAuthStateInCookie": false
+    }
+  },
+  "protectedResources": {
+    "graphApi": {
+      "endpoint": "https://graph.microsoft.com/v1.0/me",
+      "scopes": ["user.read"]
+    }
+  }
+}

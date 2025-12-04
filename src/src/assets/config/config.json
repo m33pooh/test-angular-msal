@@ -1,0 +1,21 @@
+{
+    "msalConfig": {
+        "auth": {
+            "clientId": "3e89c9ef-5b2d-4b1d-9b1d-3e89c9ef5b2d",
+            "authority": "https://login.microsoftonline.com/common",
+            "redirectUri": "http://localhost:4200"
+        },
+        "cache": {
+            "cacheLocation": "localStorage",
+            "storeAuthStateInCookie": false
+        }
+    },
+    "protectedResources": {
+        "graphApi": {
+            "endpoint": "https://graph.microsoft.com/v1.0/me",
+            "scopes": [
+                "user.read"
+            ]
+        }
+    }
+}
