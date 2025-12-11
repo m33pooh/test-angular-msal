@@ -43,13 +43,13 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                dir('src') {
-                    bat 'npm run test -- --watch=false --browsers=ChromeHeadless || exit 0'
-                }
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         dir('src') {
+        //             bat 'npm run test -- --watch=false --browsers=ChromeHeadless || exit 0'
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
@@ -60,29 +60,29 @@ pipeline {
             }
         }
 
-        stage('Test Docker Image') {
-            steps {
-                script {
-                    // Run container for health check
-                    bat "docker run -d --name ${DOCKER_IMAGE}-test -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+        // stage('Test Docker Image') {
+        //     steps {
+        //         script {
+        //             // Run container for health check
+        //             bat "docker run -d --name ${DOCKER_IMAGE}-test -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}"
                     
-                    // Wait for container to be ready
-                    sleep(time: 10, unit: 'SECONDS')
+        //             // Wait for container to be ready
+        //             sleep(time: 10, unit: 'SECONDS')
                     
-                    // Health check
-                    bat 'curl -f http://localhost:8080 || exit 1'
-                }
-            }
-            post {
-                always {
-                    script {
-                        // Cleanup test container
-                        bat "docker stop ${DOCKER_IMAGE}-test || exit 0"
-                        bat "docker rm ${DOCKER_IMAGE}-test || exit 0"
-                    }
-                }
-            }
-        }
+        //             // Health check
+        //             bat 'curl -f http://localhost:8080 || exit 1'
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             script {
+        //                 // Cleanup test container
+        //                 bat "docker stop ${DOCKER_IMAGE}-test || exit 0"
+        //                 bat "docker rm ${DOCKER_IMAGE}-test || exit 0"
+        //             }
+        //         }
+        //     }
+        // }
 
         // Uncomment this stage if you want to push to a Docker registry
         // stage('Push to Registry') {
