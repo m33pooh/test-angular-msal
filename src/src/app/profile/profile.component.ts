@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { UserInfoService, UserInfo } from '../userinfo.service';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 
@@ -21,15 +23,31 @@ type ProfileType = {
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
     profile: ProfileType = {};
     loading = true;
     error = false;
 
-    constructor(private http: HttpClient) { }
+    // User info from home page
+    userInfo: UserInfo | null = null;
+
+    private readonly _destroying$ = new Subject<void>();
+
+    constructor(
+        private http: HttpClient,
+        private userInfoService: UserInfoService
+    ) { }
 
     ngOnInit(): void {
         this.getProfile();
+
+        // Subscribe to userinfo from service
+        this.userInfoService.userInfo$
+            .pipe(takeUntil(this._destroying$))
+            .subscribe(info => {
+                this.userInfo = info;
+                console.log('ProfileComponent: Received user info', info);
+            });
     }
 
     getProfile() {
@@ -49,4 +67,10 @@ export class ProfileComponent implements OnInit {
                 }
             });
     }
+
+    ngOnDestroy(): void {
+        this._destroying$.next(undefined);
+        this._destroying$.complete();
+    }
 }
+

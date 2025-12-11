@@ -1,9 +1,15 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { InteractionStatus, RedirectRequest } from '@azure/msal-browser';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { UserInfoService } from '../userinfo.service';
+
+type UserInfo = {
+    [key: string]: any;
+};
 
 @Component({
     selector: 'app-home',
@@ -15,12 +21,17 @@ import { RouterLink } from '@angular/router';
 export class HomeComponent implements OnInit, OnDestroy {
     loginDisplay = false;
     username = '';
+    userInfo: UserInfo | null = null;
+    userInfoLoading = false;
+    userInfoError = '';
     private readonly _destroying$ = new Subject<void>();
 
     constructor(
         @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
         private authService: MsalService,
-        private msalBroadcastService: MsalBroadcastService
+        private msalBroadcastService: MsalBroadcastService,
+        private http: HttpClient,
+        private userInfoService: UserInfoService
     ) { }
 
     ngOnInit(): void {
@@ -39,7 +50,29 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loginDisplay = accounts.length > 0;
         if (this.loginDisplay) {
             this.username = accounts[0].name || accounts[0].username;
+            this.fetchUserInfo();
         }
+    }
+
+    fetchUserInfo() {
+        this.userInfoLoading = true;
+        this.userInfoError = '';
+        this.userInfo = null;
+
+        this.http.get<UserInfo>('/api/userinfo')
+            .subscribe({
+                next: (data) => {
+                    this.userInfo = data;
+                    this.userInfoService.setUserInfo(data); // Store in service
+                    this.userInfoLoading = false;
+                    console.log('User info fetched:', data);
+                },
+                error: (err) => {
+                    console.error('Error fetching user info:', err);
+                    this.userInfoError = err.message || 'Failed to fetch user info';
+                    this.userInfoLoading = false;
+                }
+            });
     }
 
     login() {
@@ -51,6 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     logout() {
+        this.userInfoService.clearUserInfo(); // Clear on logout
         this.authService.logoutRedirect({
             postLogoutRedirectUri: "http://localhost:4200"
         });

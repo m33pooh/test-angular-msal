@@ -61,6 +61,17 @@
                         </div>
                     </div>
 
+                    <!-- User Info from Home Page -->
+                    <div *ngIf="userInfo" class="userinfo-section">
+                        <h3>User Info (from API)</h3>
+                        <div class="userinfo-data">
+                            <div *ngFor="let item of userInfo | keyvalue" class="info-item">
+                                <div class="info-label">{{ item.key }}</div>
+                                <div class="info-value">{{ item.value }}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="actions">
                         <a routerLink="/" class="back-btn">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"

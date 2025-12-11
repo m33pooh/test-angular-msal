@@ -17,6 +17,7 @@ import {
 
 import { routes } from './app.routes';
 import { RuntimeConfig } from './config.service';
+import { MockApiInterceptor } from './mock-api.interceptor';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -101,6 +102,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
   protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['user.read']);
+  protectedResourceMap.set('/api/userinfo', ['user.read']);
 
   return {
     interactionType: InteractionType.Redirect,
@@ -113,6 +115,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(MsalModule),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MockApiInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MsalInterceptor,

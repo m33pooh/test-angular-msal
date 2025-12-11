@@ -86,6 +86,25 @@
                         Sign Out
                     </button>
                 </div>
+
+                <!-- User Info from API -->
+                <div class="userinfo-section">
+                    <h3>User Info from API</h3>
+                    <div *ngIf="userInfoLoading" class="userinfo-loading">
+                        <div class="spinner"></div>
+                        <span>Loading user info...</span>
+                    </div>
+                    <div *ngIf="userInfoError" class="userinfo-error">
+                        <span class="error-icon">⚠️</span>
+                        <span>{{ userInfoError }}</span>
+                    </div>
+                    <div *ngIf="userInfo && !userInfoLoading" class="userinfo-data">
+                        <div *ngFor="let item of userInfo | keyvalue" class="userinfo-item">
+                            <span class="userinfo-key">{{ item.key }}:</span>
+                            <span class="userinfo-value">{{ item.value }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
